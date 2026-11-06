@@ -1,0 +1,33 @@
+# PaperCraft AI Engineering Rules
+
+## Architecture
+- Expo Managed Workflow with Expo Router v4 and strict TypeScript.
+- Keep domain types in `src/types`, deterministic data in `src/constants`, persistent state in `src/store`, and integrations in `src/services`.
+- All document generation is client-side and must work in local mock mode without credentials.
+- Prefer pure, deterministic functions for rendering, serialization, and calculations.
+- Never expose secrets in source; use `EXPO_PUBLIC_*` variables only for client-safe keys and provide `.env.example`.
+
+## TypeScript
+- `strict: true`; no implicit `any`, unused locals, or unused parameters.
+- Use discriminated unions and readonly data where practical.
+- Validate external JSON before turning it into domain objects.
+- Avoid non-null assertions and unchecked casts unless the boundary has been validated.
+- Every exported function and store action must have an explicit type.
+- Do not write `// TODO`, placeholder implementations, or incomplete UI states.
+
+## UI and accessibility
+- Use the Modern Fluent Academic tokens: background `#F8FAFC`, surface `#FFFFFF`, border `#E2E8F0`, primary `#4F46E5`, teal `#0D9488`.
+- Interactive controls must be at least 48px high and have accessible labels.
+- Use `lucide-react-native` icons, NativeWind utility classes, Reanimated for motion, and Expo Haptics for tactile selection where available.
+- Support loading, empty, offline, and error states with useful user-facing copy.
+- Keep the question-paper preview print-safe at A4 dimensions.
+
+## Data and privacy
+- Persist branding and drafts locally with AsyncStorage through Zustand.
+- Supabase is a read-through cache only; never make the app unusable when it is unavailable.
+- LLM output must be schema-validated and sanitized before display or persistence.
+- Do not log credentials, student data, or raw images.
+
+## Verification
+- Run `npx tsc --noEmit` after each implementation phase.
+- Keep the mock mode usable without network access or API credentials.
