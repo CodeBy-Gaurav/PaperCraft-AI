@@ -28,6 +28,7 @@
     "lucide-react-native": "^1.67.0",
     "nativewind": "^4.1.23",
     "react": "19.3.0",
+    "react-dom": "19.3.0",
     "react-native": "0.88.1",
     "react-native-reanimated": "4.7.1",
     "react-native-safe-area-context": "~5.11.1",
