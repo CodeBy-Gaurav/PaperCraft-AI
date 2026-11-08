@@ -13,6 +13,7 @@ import {
   Trash2
 } from 'lucide-react-native';
 import { usePaperStore } from '@/src/store/usePaperStore';
+import { AppFooter } from '@/src/components/AppFooter';
 
 export default function DashboardScreen(): React.JSX.Element {
   const { savedPapers, instituteProfile, setActivePaper, removePaper } = usePaperStore();
@@ -163,6 +164,7 @@ export default function DashboardScreen(): React.JSX.Element {
       <Text className="mt-8 text-center text-xs text-slate-400">
         {instituteProfile.schoolName} • Offline drafts enabled
       </Text>
+      <AppFooter className="mt-4 mb-6" />
     </ScrollView>
   );
 }

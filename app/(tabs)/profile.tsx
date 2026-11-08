@@ -3,6 +3,7 @@ import { Alert, Image, Pressable, ScrollView, Text, TextInput, View } from 'reac
 import * as ImagePicker from 'expo-image-picker';
 import { Check, ImagePlus, LayoutTemplate, Trash2 } from 'lucide-react-native';
 import { usePaperStore } from '@/src/store/usePaperStore';
+import { AppFooter } from '@/src/components/AppFooter';
 import type { HeaderStyle } from '@/src/types/paper';
 
 const headerStyles: { value: HeaderStyle; title: string; description: string }[] = [
@@ -176,6 +177,7 @@ export default function ProfileScreen(): React.JSX.Element {
           {instituteProfile.headerStyle === style.value && <Check color="#4F46E5" size={18} />}
         </Pressable>
       ))}
+      <AppFooter className="mt-8 mb-6" />
     </ScrollView>
   );
 }

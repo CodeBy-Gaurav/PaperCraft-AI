@@ -308,6 +308,7 @@ export const generateA4Html = (
         <div>Invigilator Signature: _______________________</div>
         <div>Candidate Signature: _______________________</div>
       </div>
+      <div class="omr-credit">PaperCraft AI • Architected by Gaurav Tiwari</div>
     </div>
   `;
 
@@ -864,6 +865,15 @@ export const generateA4Html = (
       margin-top: 1mm;
     }
 
+    .footer-credit {
+      font-size: 6.8pt;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      color: #94A3B8;
+      margin-top: 2mm;
+      text-transform: uppercase;
+    }
+
     /* OMR SHEET */
     .omr-container {
       break-before: page;
@@ -944,6 +954,16 @@ export const generateA4Html = (
       font-weight: 600;
     }
 
+    .omr-credit {
+      margin-top: 3mm;
+      text-align: center;
+      font-size: 6.8pt;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      color: #94A3B8;
+      text-transform: uppercase;
+    }
+
     @media print {
       html, body {
         background: #FFFFFF !important;
@@ -981,6 +1001,7 @@ export const generateA4Html = (
                <div class="footer-divider"></div>
                <div class="footer-main">✦ ✦ ✦ &nbsp; END OF QUESTION PAPER &nbsp; ✦ ✦ ✦</div>
                <div class="footer-blessing">Wishing you the very best in your examination!</div>
+               <div class="footer-credit">Digitally composed via PaperCraft AI • Architected by Gaurav Tiwari</div>
              </div>
            </main>`
     }
