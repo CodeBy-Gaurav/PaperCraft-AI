@@ -1,9 +1,23 @@
 import { useState } from 'react';
 import { Alert, Image, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { Check, ImagePlus, LayoutTemplate, Trash2 } from 'lucide-react-native';
+import {
+  ArrowUpCircle,
+  Check,
+  ImagePlus,
+  LayoutTemplate,
+  RefreshCw,
+  Trash2
+} from 'lucide-react-native';
 import { usePaperStore } from '@/src/store/usePaperStore';
 import { AppFooter } from '@/src/components/AppFooter';
+import { UpdateModal } from '@/src/components/UpdateModal';
+import {
+  CURRENT_APP_VERSION,
+  CURRENT_VERSION_CODE,
+  performFullUpdateCheckAsync,
+  RemoteVersionInfo
+} from '@/src/services/updateService';
 import type { HeaderStyle } from '@/src/types/paper';
 
 const headerStyles: { value: HeaderStyle; title: string; description: string }[] = [
@@ -15,6 +29,35 @@ const headerStyles: { value: HeaderStyle; title: string; description: string }[]
 export default function ProfileScreen(): React.JSX.Element {
   const { instituteProfile, updateInstituteProfile } = usePaperStore();
   const [isPicking, setIsPicking] = useState(false);
+  const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
+  const [updateModalVisible, setUpdateModalVisible] = useState(false);
+  const [updateType, setUpdateType] = useState<'OTA' | 'MAJOR' | null>(null);
+  const [majorInfo, setMajorInfo] = useState<RemoteVersionInfo | undefined>(undefined);
+
+  const handleManualCheckUpdate = async (): Promise<void> => {
+    if (isCheckingUpdate) return;
+    setIsCheckingUpdate(true);
+    try {
+      const result = await performFullUpdateCheckAsync();
+      if (result.hasMajorUpdate && result.majorUpdateInfo) {
+        setMajorInfo(result.majorUpdateInfo);
+        setUpdateType('MAJOR');
+        setUpdateModalVisible(true);
+      } else if (result.hasOtaUpdate && result.otaDownloaded) {
+        setUpdateType('OTA');
+        setUpdateModalVisible(true);
+      } else {
+        Alert.alert(
+          'Up to Date! ✨',
+          `PaperCraft AI is running the latest version (v${CURRENT_APP_VERSION}). No updates needed.`
+        );
+      }
+    } catch (err) {
+      Alert.alert('Notice', 'Unable to reach the update server. Please check your internet connection.');
+    } finally {
+      setIsCheckingUpdate(false);
+    }
+  };
 
   const pickLogo = async (): Promise<void> => {
     if (isPicking) return;
@@ -177,7 +220,52 @@ export default function ProfileScreen(): React.JSX.Element {
           {instituteProfile.headerStyle === style.value && <Check color="#4F46E5" size={18} />}
         </Pressable>
       ))}
+
+      {/* Software & Updates Section */}
+      <Text className="mb-2.5 mt-7 text-xs font-bold uppercase tracking-wider text-muted">
+        Software & Updates
+      </Text>
+      <View className="rounded-2xl border border-line bg-white p-4">
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center flex-1 pr-2">
+            <View className="h-10 w-10 items-center justify-center rounded-xl bg-indigo-50">
+              <ArrowUpCircle color="#4F46E5" size={20} />
+            </View>
+            <View className="ml-3 flex-1">
+              <Text className="text-xs font-bold text-ink">
+                PaperCraft AI v{CURRENT_APP_VERSION}
+              </Text>
+              <Text className="mt-0.5 text-[11px] text-muted">
+                Build #{CURRENT_VERSION_CODE} • Auto-Updates Active
+              </Text>
+            </View>
+          </View>
+
+          <Pressable
+            accessibilityRole="button"
+            onPress={handleManualCheckUpdate}
+            disabled={isCheckingUpdate}
+            className="flex-row items-center rounded-xl border border-indigo-200 bg-indigo-50/70 px-3 py-2 active:bg-indigo-100"
+          >
+            <RefreshCw
+              color="#4F46E5"
+              size={13}
+            />
+            <Text className="ml-1.5 text-xs font-bold text-primary">
+              {isCheckingUpdate ? 'Checking...' : 'Check Updates'}
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+
       <AppFooter className="mt-8 mb-6" />
+
+      <UpdateModal
+        visible={updateModalVisible}
+        type={updateType}
+        majorInfo={majorInfo}
+        onDismiss={() => setUpdateModalVisible(false)}
+      />
     </ScrollView>
   );
 }
